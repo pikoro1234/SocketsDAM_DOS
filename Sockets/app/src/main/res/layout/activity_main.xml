@@ -16,7 +16,6 @@
             android:id="@+id/Titulo"
             android:paddingTop="10dp"
             android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
@@ -24,6 +23,17 @@
             android:textColor="#858587"
             android:textSize="30dp"
             android:text="DATOS CONEXIÓN" />
+
+        <TextView
+            android:id="@+id/subTitulo"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="#858587"
+            android:textSize="30dp"
+            android:text="cliente" />
 
         <EditText
             android:id="@+id/txtIpUsuario"
