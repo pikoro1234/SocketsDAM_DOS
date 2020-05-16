@@ -6,22 +6,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView txtipUser,txtpuertoConexion,txtmensajeUser;
+    private TextView txtipUser,txtpuertoConexion,txtmensajeUser,txtBandejaEntrada;
 
-    private Button botonEnviar;
+    private Button botonEnviar,botonConectar,botonDesconectar;
+
+    private boolean suitAbrirConexion,suitCerrarConexion;
+
+    private Socket socket;
+
+    String fecha,hora;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //construccion de formateo de fecha
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+        final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+
+        fecha = sdf.format(new Date());
+
+        hora = hourFormat.format(new Date());
 
         txtipUser = (TextView) findViewById(R.id.txtIpUsuario);
 
@@ -29,55 +44,88 @@ public class MainActivity extends AppCompatActivity {
 
         txtmensajeUser = (TextView) findViewById(R.id.txtEnviarMensaje);
 
+        txtBandejaEntrada = (TextView) findViewById(R.id.txtBandejaEntrada);
+
         botonEnviar = (Button) findViewById(R.id.btnEnviar);
 
-        botonEnviar.setOnClickListener(new View.OnClickListener() {
+        botonConectar = (Button)  findViewById(R.id.btnConectar);
+
+        botonDesconectar = (Button) findViewById(R.id.btnDesconectar);
+
+        botonConectar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
                         try {
 
-                            DataOutputStream dataOutputStream;
+                            suitAbrirConexion = true;
 
-                            PrintWriter printWriter;
+                            socket = new Socket(txtipUser.getText().toString(), Integer.parseInt(txtpuertoConexion.getText().toString()));
 
-                            Socket socketconexion;
+                            System.out.println("LA CONEXION CORRECTA "+txtipUser.getText().toString()+" "+Integer.parseInt(txtpuertoConexion.getText().toString()));
 
-                            socketconexion = new Socket(txtipUser.getText().toString(), Integer.parseInt(txtpuertoConexion.getText().toString()));
+                        } catch (ConnectException exception) {
 
-                            printWriter = new PrintWriter(socketconexion.getOutputStream());
+                            System.out.println("PRIMER CATCH");
 
-                            printWriter.write(txtmensajeUser.getText().toString());
-
-                            printWriter.flush();
-
-                            printWriter.close();
-
-                            socketconexion.close();
-
-                            System.out.println("datos "+txtipUser.getText().toString()+" "+Integer.parseInt(txtpuertoConexion.getText().toString())+" "+txtmensajeUser.getText().toString()+" FIN");
-
-                        }catch (UnknownHostException e) {
-
-                            e.printStackTrace();
+                            suitAbrirConexion = false;
 
                         } catch (IOException e) {
-                            
-                            e.printStackTrace();
+
+                            System.out.println("SEGUNDO CATCH");
 
                         }
                     }
                 }).start();
 
-                System.out.println("chivato");
 
-                System.out.println("datos "+txtipUser.getText().toString()+" "+Integer.parseInt(txtpuertoConexion.getText().toString())+" "+txtmensajeUser.getText().toString()+" FIN");
+                if (suitAbrirConexion){
 
-                showMessage("el boton presionado");
+                    txtBandejaEntrada.setText(hora+" conexion establecida\n");
+                }else{
+
+                    showMessage("NO SE ESTABLECIO CONEXIÓN");
+                }
+            }
+        });
+
+        botonEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showMessage("MENSAJE ENVIADO");
+            }
+        });
+
+        botonDesconectar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+
+                            suitCerrarConexion = true;
+
+                            socket.close();
+
+                            System.out.println("LA CONEXION SE CERRO ");
+
+                        } catch (IOException e) {
+
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+                if (suitCerrarConexion){
+
+                    txtBandejaEntrada.setText(hora+" conexión cerrada");
+                }
             }
         });
     }
