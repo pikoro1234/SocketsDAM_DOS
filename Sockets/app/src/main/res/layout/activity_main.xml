@@ -51,7 +51,6 @@
             android:background="#319904"
             android:text="Conectar" />
 
-        <!--android:background="#319904"-->
 
         <EditText
             android:id="@+id/txtEnviarMensaje"
@@ -62,31 +61,51 @@
             android:background="#D1CFCF"
             android:hint="escribir..."
             android:inputType="text|textMultiLine"
-            android:textColor="#474646" />
-
-        <EditText
-            android:id="@+id/txtBandejaEntrada"
-            style="@style/Widget.AppCompat.EditText"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_marginTop="3dp"
-            android:background="#D1CFCF"
-            android:gravity="top"
-            android:hint="Mensajes ..."
-            android:inputType="text|textMultiLine"
-            android:textColor="#474646" />
+            android:textColor="#474646"/>
 
         <Button
             android:id="@+id/btnEnviar"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:background="@drawable/border_layout"
             android:layout_height="wrap_content"
             android:text="Enviar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#fefefe"
+        android:layout_margin="10dp">
+        <EditText
+            android:id="@+id/txtBandejaEntrada"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="#D1CFCF"
+            android:gravity="center"
+            android:text="CONSULTAS EN CONSOLA"
+            android:inputType="text|textMultiLine"
+            android:textColor="#474646" />
+
+        <EditText
+            android:id="@+id/txtBandejaSalida"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="3dp"
+            android:background="#D1CFCF"
+            android:gravity="center"
+            android:text="RESPUESTAS  DE SERVIDOR EN CONSOLA"
+            android:inputType="text|textMultiLine"
+            android:textColor="#474646" />
+
+    </LinearLayout>
+
         <Button
             android:id="@+id/btnDesconectar"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#B7331E"

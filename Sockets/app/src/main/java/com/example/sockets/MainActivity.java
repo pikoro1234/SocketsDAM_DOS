@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView txtipUser,txtpuertoConexion,txtmensajeUser,txtBandejaEntrada;
+    private TextView txtipUser,txtpuertoConexion,txtmensajeUser,txtBandejaEntrada,txtBandejaSalida;
 
     private Button botonEnviar,botonConectar,botonDesconectar;
 
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         txtBandejaEntrada = (TextView) findViewById(R.id.txtBandejaEntrada);
 
+        txtBandejaSalida = (TextView) findViewById(R.id.txtBandejaSalida);
+
         botonEnviar = (Button) findViewById(R.id.btnEnviar);
 
         botonConectar = (Button)  findViewById(R.id.btnConectar);
@@ -68,44 +70,67 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
 
-                        DataInputStream in;
 
-                        DataOutputStream out;
+                if (socket.isConnected()){
 
-                        try {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                            while (true){
+                            DataInputStream in;
 
-                                in = new DataInputStream(socket.getInputStream());
+                            DataOutputStream out;
 
-                                out = new DataOutputStream(socket.getOutputStream());
+                            try {
 
-                                out.writeUTF(txtmensajeUser.getText().toString());
+                                while (true){
 
-                                recibido = in.readUTF();
+                                    in = new DataInputStream(socket.getInputStream());
 
-                                System.out.println(recibido);
+                                    out = new DataOutputStream(socket.getOutputStream());
 
-                                Conectar con = new Conectar();
+                                    out.writeUTF(txtmensajeUser.getText().toString());
 
-                                con.execute();
+                                    recibido = in.readUTF();
 
+                                    System.out.println(" ");
+
+                                    System.out.println(" ");
+
+                                    System.out.println("--------------------------------------");
+
+                                    System.out.println("cliente: "+txtmensajeUser.getText().toString()+"        "+hora);
+
+                                    System.out.println("servidor: "+recibido+"      "+hora );
+
+                                    System.out.println("--------------------------------------");
+
+                                    System.out.println(" ");
+
+                                    System.out.println(" ");
+
+                                    new Conectar().execute();
+
+
+
+                                }
+
+                            } catch (IOException e) {
+
+                                e.printStackTrace();
                             }
 
-                        } catch (IOException e) {
-
-                            e.printStackTrace();
                         }
+                    }).start();
 
-                    }
-                }).start();
+                }else{
+                    System.out.println("CERRADA LA CONEXION");
+                }
 
                 txtBandejaEntrada.setText(txtmensajeUser.getText().toString());
 
+                txtBandejaSalida.setText(recibido);
             }
         });
 
@@ -116,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 Desconectar desconectar = new Desconectar();
 
                 desconectar.execute();
-
             }
         });
     }
@@ -141,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 socket = new Socket(txtipUser.getText().toString(),Integer.parseInt(txtpuertoConexion.getText().toString()));
 
                 interruptor = true;
+
             } catch (ConnectException e) {
 
                 e.printStackTrace();
@@ -158,12 +183,13 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             if (interruptor){
+
                 showMessage("CONECTAMOS");
-                txtBandejaEntrada.setText(fecha+" conectamos");
+
             }else{
+
                 showMessage("NO CONECTAMOS");
             }
-
         }
     }
 
@@ -175,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
             showMessage("DESCONECTADO");
 
             txtBandejaEntrada.setText("desconectado");
+
+            txtBandejaSalida.setText("desconectado");
         }
 
         @Override
